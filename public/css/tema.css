@@ -1,0 +1,147 @@
+/* =====================================================================
+   Tema bordó · Gestión RRHH
+   Sobrescribe los colores "primary" de Bootstrap 5.3 con la paleta bordó.
+   Para cambiar el tono de todo el sistema, alcanza con editar las variables --bordo-*.
+   ===================================================================== */
+
+:root {
+    --bordo-950: #2a0610;
+    --bordo-900: #3d0a16;
+    --bordo-800: #55101f;
+    --bordo-700: #6b1427;
+    --bordo-600: #800020;   /* principal */
+    --bordo-500: #9a1f3a;
+    --bordo-400: #b6475d;
+    --bordo-300: #d17f90;
+    --bordo-200: #e9bcc5;
+    --bordo-100: #f6e5e8;
+    --bordo-50:  #fbf4f5;
+
+    /* Bootstrap: color primario */
+    --bs-primary: var(--bordo-600);
+    --bs-primary-rgb: 128, 0, 32;
+    --bs-primary-text-emphasis: #4a0012;
+    --bs-primary-bg-subtle: var(--bordo-100);
+    --bs-primary-border-subtle: var(--bordo-200);
+
+    /* Enlaces */
+    --bs-link-color: var(--bordo-600);
+    --bs-link-color-rgb: 128, 0, 32;
+    --bs-link-hover-color: var(--bordo-800);
+    --bs-link-hover-color-rgb: 85, 16, 31;
+
+    /* Foco y fondo */
+    --bs-focus-ring-color: rgba(128, 0, 32, .25);
+    --fondo-app: #f8f4f5;   /* fondo general (tarjetas y campos quedan blancos) */
+}
+
+body { background: var(--fondo-app) !important; }
+::selection { background: var(--bordo-200); color: var(--bordo-950); }
+
+/* ---------- Botones ---------- */
+.btn-primary {
+    --bs-btn-bg: var(--bordo-600);
+    --bs-btn-border-color: var(--bordo-600);
+    --bs-btn-hover-bg: var(--bordo-700);
+    --bs-btn-hover-border-color: var(--bordo-700);
+    --bs-btn-active-bg: var(--bordo-800);
+    --bs-btn-active-border-color: var(--bordo-800);
+    --bs-btn-disabled-bg: var(--bordo-600);
+    --bs-btn-disabled-border-color: var(--bordo-600);
+    --bs-btn-focus-shadow-rgb: 153, 38, 65;
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--bordo-600);
+    --bs-btn-border-color: var(--bordo-600);
+    --bs-btn-hover-bg: var(--bordo-600);
+    --bs-btn-hover-border-color: var(--bordo-600);
+    --bs-btn-active-bg: var(--bordo-700);
+    --bs-btn-active-border-color: var(--bordo-700);
+    --bs-btn-disabled-color: var(--bordo-600);
+    --bs-btn-disabled-border-color: var(--bordo-600);
+    --bs-btn-focus-shadow-rgb: 128, 0, 32;
+}
+.btn-link { --bs-btn-color: var(--bordo-600); --bs-btn-hover-color: var(--bordo-800); --bs-btn-active-color: var(--bordo-800); }
+
+/* ---------- Formularios ---------- */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bordo-300);
+    box-shadow: 0 0 0 .25rem rgba(128, 0, 32, .18);
+}
+.form-check-input:checked {
+    background-color: var(--bordo-600);
+    border-color: var(--bordo-600);
+}
+.form-check-input:focus {
+    border-color: var(--bordo-300);
+    box-shadow: 0 0 0 .25rem rgba(128, 0, 32, .18);
+}
+.form-switch .form-check-input:focus:not(:checked) {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23d17f90'/%3e%3c/svg%3e");
+}
+.form-range::-webkit-slider-thumb { background-color: var(--bordo-600); }
+.form-range::-moz-range-thumb { background-color: var(--bordo-600); }
+
+/* ---------- Navegación, pestañas, paginación, listas ---------- */
+.nav-tabs .nav-link { color: var(--bordo-600); }
+.nav-tabs .nav-link.active { color: var(--bordo-800); font-weight: 600; border-top: 3px solid var(--bordo-600); }
+.nav-pills { --bs-nav-pills-link-active-bg: var(--bordo-600); }
+
+.pagination {
+    --bs-pagination-color: var(--bordo-600);
+    --bs-pagination-hover-color: var(--bordo-800);
+    --bs-pagination-hover-bg: var(--bordo-50);
+    --bs-pagination-focus-color: var(--bordo-800);
+    --bs-pagination-focus-bg: var(--bordo-100);
+    --bs-pagination-focus-box-shadow: 0 0 0 .25rem rgba(128, 0, 32, .18);
+    --bs-pagination-active-bg: var(--bordo-600);
+    --bs-pagination-active-border-color: var(--bordo-600);
+}
+
+.list-group { --bs-list-group-active-bg: var(--bordo-600); --bs-list-group-active-border-color: var(--bordo-600); }
+.dropdown-menu { --bs-dropdown-link-active-bg: var(--bordo-100); --bs-dropdown-link-active-color: var(--bordo-900); }
+.progress, .progress-stacked { --bs-progress-bar-bg: var(--bordo-600); }
+
+/* ---------- Tablas ---------- */
+.table-primary {
+    --bs-table-color: var(--bordo-950);
+    --bs-table-bg: var(--bordo-100);
+    --bs-table-border-color: var(--bordo-200);
+    --bs-table-striped-bg: #efd9dd;
+    --bs-table-hover-bg: #efd9dd;
+}
+.table-hover > tbody > tr:hover > * { --bs-table-bg-state: rgba(128, 0, 32, .035); }
+.table > thead.table-light th { color: var(--bordo-800); font-weight: 600; }
+
+/* ---------- Tarjetas ---------- */
+.card-header.bg-white { border-bottom: 1px solid var(--bordo-100); }
+.card-header.bg-white.fw-semibold { color: var(--bordo-800); }
+
+/* ---------- Barra de navegación superior ---------- */
+.barra-principal { background: linear-gradient(90deg, var(--bordo-900), var(--bordo-700)); }
+.barra-principal .navbar-brand small { color: var(--bordo-200) !important; }
+.barra-principal .nav-link { color: #f0d9de !important; }
+.barra-principal .nav-link:hover,
+.barra-principal .nav-link:focus { color: #fff !important; background: rgba(255, 255, 255, .08); }
+.barra-principal .nav-link.active,
+.barra-principal .show > .nav-link { color: #fff !important; background: rgba(0, 0, 0, .25); }
+.barra-principal .dropdown-item.active,
+.barra-principal .dropdown-item:active { background: var(--bordo-100); color: var(--bordo-900); }
+.barra-principal .dropdown-item i { color: var(--bordo-400); }
+
+@media (max-width: 1199.98px) {
+    .barra-principal .dropdown-menu { background: rgba(0, 0, 0, .2); }
+    .barra-principal .dropdown-item { color: #f0d9de; }
+    .barra-principal .dropdown-item:hover,
+    .barra-principal .dropdown-item.active { background: rgba(255, 255, 255, .1); color: #fff; }
+    .barra-principal .dropdown-item i { color: var(--bordo-200); }
+    .barra-principal .dropdown-header { color: var(--bordo-200); }
+    .barra-principal .dropdown-divider { border-color: rgba(255, 255, 255, .15); }
+}
+
+/* Título de cada página */
+main > h1 { color: var(--bordo-800); }
+
+/* ---------- Pantalla de ingreso ---------- */
+body.fondo-login { background: radial-gradient(circle at 20% 15%, var(--bordo-500), var(--bordo-900) 60%, var(--bordo-950)) fixed !important; }
