@@ -208,7 +208,7 @@ class LicenciaController extends Controller
 
         $dias = collect(CarbonPeriod::create($desde, $hasta))->map(fn ($d) => Carbon::parse($d->format('Y-m-d')));
 
-        $feriados = Feriado::whereBetween('fecha', [$desde->toDateString(), $hasta->toDateString()])
+        $feriados = Feriado::whereDate('fecha', '>=', $desde->toDateString())->whereDate('fecha', '<=', $hasta->toDateString())
             ->get()
             ->mapWithKeys(fn ($f) => [$f->fecha->toDateString() => $f->descripcion]);
 

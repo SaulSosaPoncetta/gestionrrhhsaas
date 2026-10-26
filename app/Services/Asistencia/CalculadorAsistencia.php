@@ -52,7 +52,7 @@ class CalculadorAsistencia
         }
         $empleados->loadMissing('horario');
 
-        $feriados = Feriado::whereBetween('fecha', [$desde->toDateString(), $hasta->toDateString()])
+        $feriados = Feriado::whereDate('fecha', '>=', $desde->toDateString())->whereDate('fecha', '<=', $hasta->toDateString())
             ->get()
             ->keyBy(fn ($f) => $f->fecha->toDateString());
 
