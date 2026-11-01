@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'password.cambio'  => \App\Http\Middleware\CambioPasswordObligatorio::class,
         ]);
 
+        // Cabeceras de seguridad en todas las respuestas (CSP, X-Frame-Options, HSTS, etc.)
+        $middleware->append(\App\Http\Middleware\CabecerasSeguridad::class);
+
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('dashboard'));
     })

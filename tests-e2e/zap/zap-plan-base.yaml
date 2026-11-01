@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# OWASP ZAP — Escaneo base (pasivo, sin login) para ZAP Desktop
+# Equivale a zap-baseline.py de Docker: recorre lo público y analiza las respuestas
+# sin atacar. Lo usa correr-zap.ps1 -Modo base -Motor desktop.
+# ---------------------------------------------------------------------------
+env:
+  contexts:
+    - name: gestionrrhh-publico
+      urls:
+        - ${ZAP_TARGET}
+      includePaths:
+        - ${ZAP_TARGET}.*
+  parameters:
+    failOnError: true
+    progressToStdout: true
+
+jobs:
+  - type: alertFilter
+    alertFilters:
+      - ruleId: 10010          # Cookie No HttpOnly Flag en XSRF-TOKEN: comportamiento normal de Laravel
+        parameter: XSRF-TOKEN
+        newRisk: False Positive
+  - type: spider
+    parameters:
+      context: gestionrrhh-publico
+      url: ${ZAP_TARGET}/login
+      maxDuration: 2
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 5
+  - type: report
+    parameters:
+      template: traditional-html
+      reportDir: ${ZAP_REPORTES}
+      reportFile: reporte_zap_base
+      reportTitle: OWASP ZAP - Gestión RRHH (escaneo base)

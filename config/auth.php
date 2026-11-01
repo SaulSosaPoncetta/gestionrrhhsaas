@@ -114,4 +114,17 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Intentos de login por minuto (por IP)
+    |--------------------------------------------------------------------------
+    |
+    | Protección contra fuerza bruta en POST /login. Dejar en 10 en producción.
+    | Para una prueba de carga en local o staging (muchos usuarios desde una
+    | misma IP) se puede subir con LOGIN_INTENTOS_POR_MINUTO=1000.
+    |
+    */
+
+    'login_intentos_por_minuto' => (int) env('LOGIN_INTENTOS_POR_MINUTO', 10),
+
 ];

@@ -1,0 +1,131 @@
+# ---------------------------------------------------------------------------
+# OWASP ZAP — Plan de escaneo autenticado del Sistema de Gestión RRHH
+# (ZAP Automation Framework, ZAP 2.15 o superior)
+#
+# Variables de entorno (las carga correr-zap.ps1):
+#   ZAP_TARGET   URL del sistema, sin barra final   ej. http://host.docker.internal:8000
+#   ZAP_REPORTES carpeta donde guardar los reportes  ej. /zap/wrk/reporte
+#
+# Qué hace:
+#   1. Ingresa como admin de RRHH y como empleado (formulario de login con token CSRF).
+#   2. Recorre el sistema con el spider (cada usuario ve pantallas distintas).
+#   3. Escaneo pasivo: analiza cada respuesta (cabeceras, cookies, formularios).
+#   4. Escaneo activo: prueba ataques reales (XSS, inyección SQL, path traversal, etc.).
+#   5. Genera el reporte HTML y uno en JSON.
+#
+# NUNCA contra producción: el escaneo activo envía miles de requests con datos basura.
+# ---------------------------------------------------------------------------
+
+env:
+  contexts:
+    - name: gestionrrhh
+      urls:
+        - ${ZAP_TARGET}
+      includePaths:
+        - ${ZAP_TARGET}.*
+      excludePaths:
+        # No cerrar la sesión ni cambiar la contraseña del usuario que escanea
+        - ${ZAP_TARGET}/logout.*
+        - ${ZAP_TARGET}/password.*
+        # Recursos estáticos: no aportan al escaneo activo
+        - ${ZAP_TARGET}/(css|js|build|vendor|storage)/.*
+      authentication:
+        method: form
+        parameters:
+          loginPageUrl: ${ZAP_TARGET}/login
+          loginRequestUrl: ${ZAP_TARGET}/login
+          # ZAP agrega solo el _token (CSRF de Laravel), que toma de la página de login
+          loginRequestBody: email={%username%}&password={%password%}
+        verification:
+          method: response
+          loggedInRegex: \Q/logout\E
+          loggedOutRegex: \Qname="password"\E
+          pollFrequency: 60
+          pollUnits: requests
+      sessionManagement:
+        method: cookie
+      users:
+        - name: admin
+          credentials:
+            username: admin@demo.test
+            password: admin1234
+        - name: empleado
+          credentials:
+            username: rodriguez@demo.test
+            password: empleado123
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+
+jobs:
+  # Hallazgos revisados y aceptados (ver README, sección "Falsos positivos")
+  - type: alertFilter
+    alertFilters:
+      - ruleId: 10010          # Cookie No HttpOnly Flag
+        parameter: XSRF-TOKEN  # Laravel la deja legible a propósito: el JavaScript la reenvía como X-XSRF-TOKEN
+        newRisk: False Positive
+
+  - type: passiveScan-config
+    parameters:
+      maxAlertsPerRule: 10
+      scanOnlyInScope: true
+
+  # --- Recorrido como admin de RRHH
+  - type: spider
+    name: spider-admin
+    parameters:
+      context: gestionrrhh
+      user: admin
+      url: ${ZAP_TARGET}/dashboard
+      maxDuration: 5
+      maxDepth: 6
+
+  # --- Recorrido como empleado (portal de autogestión)
+  - type: spider
+    name: spider-empleado
+    parameters:
+      context: gestionrrhh
+      user: empleado
+      url: ${ZAP_TARGET}/mi
+      maxDuration: 3
+      maxDepth: 5
+
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 10
+
+  # --- Ataques
+  - type: activeScan
+    name: activo-admin
+    parameters:
+      context: gestionrrhh
+      user: admin
+      maxRuleDurationInMins: 3
+      maxScanDurationInMins: 40
+      threadPerHost: 4
+
+  - type: activeScan
+    name: activo-empleado
+    parameters:
+      context: gestionrrhh
+      user: empleado
+      maxRuleDurationInMins: 2
+      maxScanDurationInMins: 20
+      threadPerHost: 4
+
+  # --- Reportes
+  - type: report
+    parameters:
+      template: traditional-html
+      reportDir: ${ZAP_REPORTES}
+      reportFile: reporte_zap_completo
+      reportTitle: OWASP ZAP - Gestión RRHH (escaneo autenticado)
+    risks: [high, medium, low, info]
+    confidences: [high, medium, low, confirmed]
+
+  - type: report
+    parameters:
+      template: traditional-json
+      reportDir: ${ZAP_REPORTES}
+      reportFile: reporte_zap_completo

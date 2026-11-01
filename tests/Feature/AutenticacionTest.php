@@ -47,6 +47,16 @@ it('limita los intentos de login (throttle 10 por minuto)', function () {
     $this->post('/login', ['email' => 'ataque@x.test', 'password' => 'otra'])->assertStatus(429);
 });
 
+it('el límite de intentos de login se configura con LOGIN_INTENTOS_POR_MINUTO', function () {
+    config(['auth.login_intentos_por_minuto' => 3]);
+
+    for ($i = 0; $i < 3; $i++) {
+        $this->post('/login', ['email' => 'ataque@x.test', 'password' => 'x' . $i])->assertStatus(302);
+    }
+
+    $this->post('/login', ['email' => 'ataque@x.test', 'password' => 'otra'])->assertStatus(429);
+});
+
 it('saca al usuario deshabilitado aunque tenga sesión', function () {
     $admin = crearAdmin(null, ['activo' => false]);
 

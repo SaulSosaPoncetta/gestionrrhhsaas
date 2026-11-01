@@ -1,0 +1,4 @@
+capturas/
+reporte/
+__pycache__/
+.pytest_cache/

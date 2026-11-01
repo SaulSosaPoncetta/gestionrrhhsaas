@@ -28,7 +28,7 @@ Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:10,1');
+    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
 });
 
 Route::middleware(['auth', 'empresa.activa', 'password.cambio'])->group(function () {
