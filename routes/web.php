@@ -15,6 +15,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\FeriadoController;
 use App\Http\Controllers\FichadaController;
 use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LicenciaController;
 use App\Http\Controllers\LiquidacionController;
 use App\Http\Controllers\PuestoController;
@@ -24,7 +25,12 @@ use App\Http\Controllers\VacacionController;
 use App\Http\Controllers\Portal;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('dashboard'));
+// La landing vive en la raíz; si ya hay sesión, LandingController@index redirige al sistema
+Route::get('/', [LandingController::class, 'index'])->name('landing.index');
+Route::get('/landing', fn () => redirect()->route('landing.index'));
+Route::post('/solicitar-demo', [LandingController::class, 'solicitar'])
+    ->middleware('throttle:5,1')
+    ->name('landing.solicitar');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login');
